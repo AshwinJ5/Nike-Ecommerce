@@ -35,15 +35,15 @@ export interface IVariationColor {
     status: boolean;
 }
 
-export const ColorMap: Record<string, string> = {
-    Green: "#840D91",
-    Purple: "#840D91",
-    Red: "#9D333B",
-    White: "#f3f4f6",
-    Black: "#1f2937",
-    Blue: "#2563eb",
-    Yellow: "#facc15",
-    Pink: "#ec4899",
-    Orange: "#f97316",
-    Lime: "#a3e635",
+export const ColorMap: Record<string, {code:string, image:string}> = {
+    White: {code:"#9ADA2A", image:"/shoe_green.png"},
+    Red: {code:"#840D91", image:"/shoe_purple.png"},
+    Black: {code:"#9D333B", image:"/shoe_red.png"},
+    // White: {code:"#f3f4f6", image:"/shoe_white.png"},
+    // Black: {code:"#1f2937", image:"/shoe_black.png"},
+    Blue: {code:"#2563eb", image:"/shoe_blue.png"},
+    Yellow: {code:"#facc15", image:"/shoe_yellow.png"},
+    Pink: {code:"#ec4899", image:"/shoe_pink.png"},
+    Orange: {code:"#f97316", image:"/shoe_orange.png"},
+    Lime: {code:"#a3e635", image:"/shoe_lime.png"},
 };

@@ -89,7 +89,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
     const productImage =
         currentVariation?.color_images?.[0] || product.product_images?.[0]?.product_image || "/placeholder.png";
 
-    const backgroundColor = ColorMap[currentVariation?.color_name] || "#a3e635";
+    const backgroundColor = ColorMap[currentVariation?.color_name].code || "#a3e635";
 
     const handleBuyNow = async (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -177,7 +177,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
                                             : "border-neutral-700"
                                     }`}
                                     style={{
-                                        backgroundColor: ColorMap[variation.color_name] || "#666",
+                                        backgroundColor: ColorMap[variation.color_name].code || "#666",
                                     }}
                                     title={variation.color_name}
                                 />
@@ -294,7 +294,7 @@ export default function ProductCard({ product }: { product: IProduct }) {
                                             : "border-neutral-700 hover:border-neutral-500"
                                     }`}
                                     style={{
-                                        backgroundColor: ColorMap[variation.color_name] || "#666",
+                                        backgroundColor: ColorMap[variation.color_name].code || "#666",
                                     }}
                                     title={variation.color_name}
                                 />
