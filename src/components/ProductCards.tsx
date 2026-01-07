@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useLayoutEffect } from "react";
+import { useRef, useState, useLayoutEffect } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 import { ColorMap, IProduct, ISize } from "@/types/product";
@@ -73,10 +73,23 @@ export default function ProductCards({ product }: { product: IProduct }) {
         if (!canHover) return;
 
         const ctx = gsap.context(() => {
-            const container = containerRef.current;
-            if (!container) return;
+            const mm = gsap.matchMedia();
+
+            // 🔹 DESKTOP INITIAL STATE
+            mm.add("(min-width: 640px)", () => {
+                gsap.set(circleRef.current, { bottom: 175, left: -20 });
+                gsap.set(textRef.current, { bottom: 0 });
+                gsap.set(imageRef.current, { bottom: 145 });
+                gsap.set(titleRef.current, { bottom: 50, opacity: 1 });
+                gsap.set([sizeRef.current, colorRef.current, buttonRef.current], {
+                    bottom: -30,
+                    opacity: 0,
+                });
+            });
 
             const hoverIn = () => {
+                tlRef.current?.kill();
+
                 gsap.to(circleRef.current, {
                     bottom: 245,
                     left: 50,
@@ -96,33 +109,27 @@ export default function ProductCards({ product }: { product: IProduct }) {
                     ease: "power3.out",
                 });
 
-                tlRef.current?.kill();
-
                 tlRef.current = gsap
                     .timeline()
                     .to(titleRef.current, {
                         bottom: 170,
                         opacity: 1,
                         duration: 0.5,
-                        ease: "power3.out",
                     })
                     .to(sizeRef.current, {
                         bottom: 120,
                         opacity: 1,
                         duration: 0.3,
-                        ease: "power3.out",
                     })
                     .to(colorRef.current, {
                         bottom: 80,
                         opacity: 1,
                         duration: 0.3,
-                        ease: "power3.out",
                     })
                     .to(buttonRef.current, {
                         bottom: 10,
                         opacity: 1,
                         duration: 1,
-                        ease: "power3.out",
                     });
             };
 
@@ -131,44 +138,28 @@ export default function ProductCards({ product }: { product: IProduct }) {
                 tlRef.current = null;
 
                 gsap.to(circleRef.current, {
-                    bottom: "175px",
-                    left: "-20px",
+                    bottom: 175,
+                    left: -20,
                     duration: 0.6,
-                    ease: "power3.out",
                 });
 
-                gsap.to(textRef.current, {
-                    bottom: "0px",
-                    duration: 0.6,
-                    ease: "power3.out",
-                });
-
-                gsap.to(imageRef.current, {
-                    bottom: 145,
-                    duration: 0.6,
-                    ease: "power3.out",
-                });
-
-                gsap.to(titleRef.current, {
-                    bottom: 50,
-                    duration: 0.5,
-                    ease: "power3.out",
-                });
+                gsap.to(textRef.current, { bottom: 0, duration: 0.6 });
+                gsap.to(imageRef.current, { bottom: 145, duration: 0.6 });
+                gsap.to(titleRef.current, { bottom: 50, duration: 0.5 });
 
                 gsap.to([sizeRef.current, colorRef.current, buttonRef.current], {
                     bottom: -30,
                     opacity: 0,
                     duration: 0.5,
-                    ease: "power3.out",
                 });
             };
 
-            container.addEventListener("mouseenter", hoverIn);
-            container.addEventListener("mouseleave", hoverOut);
+            containerRef.current?.addEventListener("mouseenter", hoverIn);
+            containerRef.current?.addEventListener("mouseleave", hoverOut);
 
             return () => {
-                container.removeEventListener("mouseenter", hoverIn);
-                container.removeEventListener("mouseleave", hoverOut);
+                containerRef.current?.removeEventListener("mouseenter", hoverIn);
+                containerRef.current?.removeEventListener("mouseleave", hoverOut);
             };
         }, containerRef);
 
@@ -182,16 +173,16 @@ export default function ProductCards({ product }: { product: IProduct }) {
         >
             <div
                 ref={circleRef}
-                className="h-[384px] w-[384px] rounded-full absolute z-20 transition-colors duration-500"
-                style={{ bottom: "175px", left: "-20px", backgroundColor }}
+                className="sm:h-[384px] sm:w-[384px] h-[184px] w-[184px] rounded-full absolute z-20 transition-colors duration-500"
+                style={{ bottom: "135px", left: "20px", backgroundColor }}
             />
 
             <span
                 ref={textRef}
                 className="text-[#ffffff08] sm:text-[160px] text-[86px] font-bold tracking-[-0.03em] italic z-10 relative"
-                style={{ bottom: "0px" }}
+                style={{ bottom: "40px" }}
             >
-                NIKE
+                {product?.name?.split(" ")[0]?.toUpperCase() || "NIKE"}
             </span>
             <div
                 ref={imageRef}
@@ -202,8 +193,8 @@ export default function ProductCards({ product }: { product: IProduct }) {
             </div>
             <div
                 ref={titleRef}
-                className="absolute left-0 right-0 text-center text-white uppercase font-bold text-[20px]"
-                style={{ bottom: 50 }}
+                className="absolute left-0 right-0 text-center text-white uppercase font-bold sm:text-[20px] text-[14px]"
+                style={{ bottom: 90 }}
             >
                 {product.name}
             </div>
@@ -211,9 +202,9 @@ export default function ProductCards({ product }: { product: IProduct }) {
             <div
                 ref={sizeRef}
                 className="absolute left-0 right-0 text-center text-white z-50 flex justify-center gap-4 items-center"
-                style={{ bottom: -30, opacity: 0 }}
+                style={{ bottom: 65, opacity: 1 }}
             >
-                <label className="block text-[16px]">SIZE:</label>
+                <label className="block sm:text-[16px] text-[12px]">SIZE:</label>
                 <div className="flex gap-1 justify-center flex-wrap">
                     {availableSizes
                         .sort((a, b) => Number(a.size_name) - Number(b.size_name))
@@ -225,7 +216,7 @@ export default function ProductCards({ product }: { product: IProduct }) {
                                     e.stopPropagation();
                                     setSelectedSizeIndex(index);
                                 }}
-                                className={`h-[30px] w-[30px] rounded-[5px] text-[16px] font-semibold transition-all
+                                className={`sm:h-[30px] sm:w-[30px] h-[20px] w-[20px] sm:rounded-[5px] rounded-[2px] sm:text-[16px] text-[10px] font-semibold transition-all
                 ${
                     selectedSizeIndex === index
                         ? "bg-white text-neutral-900 scale-110"
@@ -242,9 +233,9 @@ export default function ProductCards({ product }: { product: IProduct }) {
             <div
                 ref={colorRef}
                 className="absolute left-0 right-0 flex justify-center items-center gap-3 text-white opacity-0"
-                style={{ bottom: -30, opacity: 0 }}
+                style={{ bottom: 40, opacity: 1 }}
             >
-                <span className="text-[14px]">COLOR:</span>
+                <span className="sm:text-[16px] text-[12px]">COLOR:</span>
                 <div className="flex gap-2">
                     {product.variation_colors.map((variation, index) => (
                         <button
@@ -269,8 +260,8 @@ export default function ProductCards({ product }: { product: IProduct }) {
                 ref={buttonRef}
                 onClick={handleBuyNow}
                 disabled={loading}
-                className="absolute left-1/2 -translate-x-1/2 text-black bg-white p-3 rounded-[5px] uppercase font-bold text-[16px] gap-5 disabled:opacity-50 w-[90%] sm:w-[50%]"
-                style={{ bottom: -30, opacity: 0 }}
+                className="absolute left-1/2 -translate-x-1/2 text-black bg-white sm:p-3 p-1 rounded-[5px] uppercase font-bold sm:text-[16px] text-[12px] gap-5 disabled:opacity-50 w-[90%] sm:w-[50%]"
+                style={{ bottom: 10, opacity: 1 }}
             >
                 {loading ? (
                     <span className="h-5 w-5 block mx-auto border-2 border-black/30 border-t-black rounded-full animate-spin" />
