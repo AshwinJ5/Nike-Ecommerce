@@ -173,7 +173,7 @@ export default function ProductCards({ product }: { product: IProduct }) {
         >
             <div
                 ref={circleRef}
-                className="xl:h-[384px] xl:w-[384px] h-[184px] w-[184px] rounded-full absolute z-20 transition-colors duration-500 bottom-[135px] left-[20px] xl:bottom-[245px] xl:left-[50px]"
+                className="xl:h-[384px] h-[80%] aspect-square rounded-full absolute z-20 transition-colors duration-500 bottom-[135px] left-[20px] xl:bottom-[245px] xl:left-[50px]"
                 style={{ backgroundColor }}
             />
 
@@ -192,7 +192,7 @@ export default function ProductCards({ product }: { product: IProduct }) {
             </div>
             <div
                 ref={titleRef}
-                className="absolute left-0 right-0 text-center text-white uppercase font-bold xl:text-[20px] text-[14px] bottom-[90px] xl:bottom-[170px]"
+                className="absolute left-0 right-0 text-center text-white uppercase font-bold xl:text-[20px] text-[14px] bottom-[90px] xl:bottom-[170px] line-clamp-1"
             >
                 {product.name}
             </div>
