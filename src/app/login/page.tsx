@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useState } from "react";
 import { verifyUser, registerUser } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
     const [phone, setPhone] = useState("");
@@ -13,7 +12,6 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
 
     const login = useAuthStore((s) => s.login);
-    const router = useRouter();
 
     // STEP 1: Verify phone (OTP is static as per test)
     const handleVerify = async () => {
@@ -30,7 +28,7 @@ export default function LoginPage() {
                 document.cookie = `access_token=${res.token.access}; path=/; max-age=604800; SameSite=Lax`;
 
                 login(res.token.access);
-                router.push("/");
+                window.location.href = "/";
             } else {
                 // New user → show name field
                 setStep("register");
@@ -61,7 +59,7 @@ export default function LoginPage() {
                 phone: res.phone_number,
             });
 
-            router.push("/");
+            window.location.href = "/";
         } catch (err) {
             console.error(err);
         } finally {
