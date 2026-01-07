@@ -11,7 +11,7 @@
 
     ```bash
     git clone https://github.com/AshwinJ5/Nike-Ecommerce.git
-    cd skill-test-nextjs
+    cd Nike-Ecommerce
     npm install
     ```
 
