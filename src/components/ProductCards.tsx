@@ -75,8 +75,8 @@ export default function ProductCards({ product }: { product: IProduct }) {
         const ctx = gsap.context(() => {
             const mm = gsap.matchMedia();
 
-            // 🔹 DESKTOP INITIAL STATE
-            mm.add("(min-width: 640px)", () => {
+            // 🔹 DESKTOP INITIAL STATE (Large Screens)
+            mm.add("(min-width: 1280px)", () => {
                 gsap.set(circleRef.current, { bottom: 175, left: -20 });
                 gsap.set(textRef.current, { bottom: 0 });
                 gsap.set(imageRef.current, { bottom: 145 });
@@ -173,38 +173,35 @@ export default function ProductCards({ product }: { product: IProduct }) {
         >
             <div
                 ref={circleRef}
-                className="sm:h-[384px] sm:w-[384px] h-[184px] w-[184px] rounded-full absolute z-20 transition-colors duration-500"
-                style={{ bottom: "135px", left: "20px", backgroundColor }}
+                className="xl:h-[384px] xl:w-[384px] h-[184px] w-[184px] rounded-full absolute z-20 transition-colors duration-500 bottom-[135px] left-[20px] xl:bottom-[245px] xl:left-[50px]"
+                style={{ backgroundColor }}
             />
 
             <span
                 ref={textRef}
-                className="text-[#ffffff08] sm:text-[160px] text-[86px] font-bold tracking-[-0.03em] italic z-10 relative"
-                style={{ bottom: "40px" }}
+                className="text-[#ffffff08] xl:text-[160px] text-[86px] font-bold tracking-[-0.03em] italic z-10 relative bottom-[40px] xl:bottom-[75px]"
             >
                 {product?.name?.split(" ")[0]?.toUpperCase() || "NIKE"}
             </span>
             <div
                 ref={imageRef}
-                className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none"
-                style={{ bottom: 145, rotate: "-27deg" }}
+                className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none bottom-[145px] xl:bottom-[300px]"
+                style={{ rotate: "-27deg" }}
             >
                 <Image src={productImage} alt="Nike Shoe" width={300} height={400} />
             </div>
             <div
                 ref={titleRef}
-                className="absolute left-0 right-0 text-center text-white uppercase font-bold sm:text-[20px] text-[14px]"
-                style={{ bottom: 90 }}
+                className="absolute left-0 right-0 text-center text-white uppercase font-bold xl:text-[20px] text-[14px] bottom-[90px] xl:bottom-[170px]"
             >
                 {product.name}
             </div>
 
             <div
                 ref={sizeRef}
-                className="absolute left-0 right-0 text-center text-white z-50 flex justify-center gap-4 items-center"
-                style={{ bottom: 65, opacity: 1 }}
+                className="absolute left-0 right-0 text-center text-white z-50 flex justify-center gap-4 items-center bottom-[65px] xl:bottom-[120px] opacity-100"
             >
-                <label className="block sm:text-[16px] text-[12px]">SIZE:</label>
+                <label className="block xl:text-[16px] text-[12px]">SIZE:</label>
                 <div className="flex gap-1 justify-center flex-wrap">
                     {availableSizes
                         .sort((a, b) => Number(a.size_name) - Number(b.size_name))
@@ -216,7 +213,7 @@ export default function ProductCards({ product }: { product: IProduct }) {
                                     e.stopPropagation();
                                     setSelectedSizeIndex(index);
                                 }}
-                                className={`sm:h-[30px] sm:w-[30px] h-[20px] w-[20px] sm:rounded-[5px] rounded-[2px] sm:text-[16px] text-[10px] font-semibold transition-all
+                                className={`xl:h-[30px] xl:w-[30px] h-[20px] w-[20px] xl:rounded-[5px] rounded-[2px] xl:text-[16px] text-[10px] font-semibold transition-all
                 ${
                     selectedSizeIndex === index
                         ? "bg-white text-neutral-900 scale-110"
@@ -232,10 +229,9 @@ export default function ProductCards({ product }: { product: IProduct }) {
             </div>
             <div
                 ref={colorRef}
-                className="absolute left-0 right-0 flex justify-center items-center gap-3 text-white opacity-0"
-                style={{ bottom: 40, opacity: 1 }}
+                className="absolute left-0 right-0 flex justify-center items-center gap-3 text-white bottom-[40px] xl:bottom-[80px] opacity-100"
             >
-                <span className="sm:text-[16px] text-[12px]">COLOR:</span>
+                <span className="xl:text-[16px] text-[12px]">COLOR:</span>
                 <div className="flex gap-2">
                     {product.variation_colors.map((variation, index) => (
                         <button
@@ -260,8 +256,7 @@ export default function ProductCards({ product }: { product: IProduct }) {
                 ref={buttonRef}
                 onClick={handleBuyNow}
                 disabled={loading}
-                className="absolute left-1/2 -translate-x-1/2 text-black bg-white sm:p-3 p-1 rounded-[5px] uppercase font-bold sm:text-[16px] text-[12px] gap-5 disabled:opacity-50 w-[90%] sm:w-[50%]"
-                style={{ bottom: 10, opacity: 1 }}
+                className="absolute left-1/2 -translate-x-1/2 text-black bg-white xl:p-3 p-1 rounded-[5px] uppercase font-bold xl:text-[16px] text-[12px] gap-5 disabled:opacity-50 w-[90%] xl:w-[50%] bottom-[10px] opacity-100"
             >
                 {loading ? (
                     <span className="h-5 w-5 block mx-auto border-2 border-black/30 border-t-black rounded-full animate-spin" />
