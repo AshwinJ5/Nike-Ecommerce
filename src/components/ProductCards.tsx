@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useLayoutEffect } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 import { ColorMap, IProduct, ISize } from "@/types/product";
@@ -68,115 +68,111 @@ export default function ProductCards({ product }: { product: IProduct }) {
         }
     };
 
-    useEffect(() => {
-        const container = containerRef.current;
-        const circle = circleRef.current;
-        const text = textRef.current;
-        const title = titleRef.current;
-        const image = imageRef.current;
-        const size = sizeRef.current;
-        const color = colorRef.current;
-        const button = buttonRef.current;
+    useLayoutEffect(() => {
+        const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+        if (!canHover) return;
 
-        if (!container || !circle) return;
+        const ctx = gsap.context(() => {
+            const container = containerRef.current;
+            if (!container) return;
 
-        const hoverIn = () => {
-            gsap.to(circle, {
-                bottom: 245,
-                left: 50,
-                duration: 0.6,
-                ease: "power3.out",
-            });
-
-            gsap.to(text, {
-                bottom: 75,
-                duration: 0.6,
-                ease: "power3.out",
-            });
-
-            gsap.to(image, {
-                bottom: 300,
-                duration: 0.6,
-                ease: "power3.out",
-            });
-
-            tlRef.current?.kill();
-            // 👇 Sequential reveal
-            const tl = gsap.timeline();
-            tlRef.current = tl;
-            tl.to(title, {
-                bottom: 170,
-                opacity: 1,
-                duration: 0.5,
-                ease: "power3.out",
-            })
-                .to(size, {
-                    bottom: 120,
-                    opacity: 1,
-                    duration: 0.3,
-                    ease: "power3.out",
-                })
-                .to(color, {
-                    bottom: 80,
-                    opacity: 1,
-                    duration: 0.3,
-                    ease: "power3.out",
-                })
-                .to(button, {
-                    bottom: 10,
-                    opacity: 1,
-                    duration: 1,
+            const hoverIn = () => {
+                gsap.to(circleRef.current, {
+                    bottom: 245,
+                    left: 50,
+                    duration: 0.6,
                     ease: "power3.out",
                 });
-        };
 
-        const hoverOut = () => {
-            gsap.to(circle, {
-                bottom: "175px",
-                left: "-20px",
-                duration: 0.6,
-                ease: "power3.out",
-            });
-            gsap.to(text, {
-                bottom: "0px",
-                duration: 0.6,
-                ease: "power3.out",
-            });
-            gsap.to(image, {
-                bottom: 145,
-                // rotation: -37,
-                duration: 0.6,
-                ease: "power3.out",
-            });
-            tlRef.current?.kill();
-            tlRef.current = null;
-            gsap.to(title, {
-                bottom: 50,
-                duration: 0.5,
-                ease: "power3.out",
-            });
+                gsap.to(textRef.current, {
+                    bottom: 75,
+                    duration: 0.6,
+                    ease: "power3.out",
+                });
 
-            gsap.to([size, color], {
-                bottom: -30,
-                opacity: 0,
-                duration: 0.5,
-                ease: "power3.out",
-            });
-            gsap.to(button, {
-                bottom: -30,
-                opacity: 0,
-                duration: 0.5,
-                ease: "power3.out",
-            });
-        };
+                gsap.to(imageRef.current, {
+                    bottom: 300,
+                    duration: 0.6,
+                    ease: "power3.out",
+                });
 
-        container.addEventListener("mouseenter", hoverIn);
-        container.addEventListener("mouseleave", hoverOut);
+                tlRef.current?.kill();
 
-        return () => {
-            container.removeEventListener("mouseenter", hoverIn);
-            container.removeEventListener("mouseleave", hoverOut);
-        };
+                tlRef.current = gsap
+                    .timeline()
+                    .to(titleRef.current, {
+                        bottom: 170,
+                        opacity: 1,
+                        duration: 0.5,
+                        ease: "power3.out",
+                    })
+                    .to(sizeRef.current, {
+                        bottom: 120,
+                        opacity: 1,
+                        duration: 0.3,
+                        ease: "power3.out",
+                    })
+                    .to(colorRef.current, {
+                        bottom: 80,
+                        opacity: 1,
+                        duration: 0.3,
+                        ease: "power3.out",
+                    })
+                    .to(buttonRef.current, {
+                        bottom: 10,
+                        opacity: 1,
+                        duration: 1,
+                        ease: "power3.out",
+                    });
+            };
+
+            const hoverOut = () => {
+                tlRef.current?.kill();
+                tlRef.current = null;
+
+                gsap.to(circleRef.current, {
+                    bottom: "175px",
+                    left: "-20px",
+                    duration: 0.6,
+                    ease: "power3.out",
+                });
+
+                gsap.to(textRef.current, {
+                    bottom: "0px",
+                    duration: 0.6,
+                    ease: "power3.out",
+                });
+
+                gsap.to(imageRef.current, {
+                    bottom: 145,
+                    duration: 0.6,
+                    ease: "power3.out",
+                });
+
+                gsap.to(titleRef.current, {
+                    bottom: 50,
+                    duration: 0.5,
+                    ease: "power3.out",
+                });
+
+                gsap.to([sizeRef.current, colorRef.current, buttonRef.current], {
+                    bottom: -30,
+                    opacity: 0,
+                    duration: 0.5,
+                    ease: "power3.out",
+                });
+            };
+
+            container.addEventListener("mouseenter", hoverIn);
+            container.addEventListener("mouseleave", hoverOut);
+
+            return () => {
+                container.removeEventListener("mouseenter", hoverIn);
+                container.removeEventListener("mouseleave", hoverOut);
+            };
+        }, containerRef);
+
+        return () => ctx.revert();
     }, []);
 
     return (
@@ -192,7 +188,7 @@ export default function ProductCards({ product }: { product: IProduct }) {
 
             <span
                 ref={textRef}
-                className="text-[#ffffff08] text-[160px] font-bold tracking-[-0.03em] italic z-10 relative"
+                className="text-[#ffffff08] sm:text-[160px] text-[86px] font-bold tracking-[-0.03em] italic z-10 relative"
                 style={{ bottom: "0px" }}
             >
                 NIKE
@@ -273,10 +269,14 @@ export default function ProductCards({ product }: { product: IProduct }) {
                 ref={buttonRef}
                 onClick={handleBuyNow}
                 disabled={loading}
-                className="absolute left-1/2 -translate-x-1/2 text-black bg-white p-3 rounded-[5px] uppercase font-bold text-[16px] gap-5 disabled:opacity-50"
+                className="absolute left-1/2 -translate-x-1/2 text-black bg-white p-3 rounded-[5px] uppercase font-bold text-[16px] gap-5 disabled:opacity-50 w-[90%] sm:w-[50%]"
                 style={{ bottom: -30, opacity: 0 }}
             >
-                {loading ? "PROCESSING..." : "BUY NOW"}
+                {loading ? (
+                    <span className="h-5 w-5 block mx-auto border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                ) : (
+                    "BUY NOW"
+                )}
             </button>
         </div>
     );
