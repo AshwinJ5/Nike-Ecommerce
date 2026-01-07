@@ -12,6 +12,7 @@ export default function ProductCards({ product }: { product: IProduct }) {
     const sizeRef = useRef<HTMLDivElement>(null);
     const colorRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
+    const tlRef = useRef<gsap.core.Timeline | null>(null);
 
     const [selectedColorIndex, setSelectedColorIndex] = useState(0);
 
@@ -55,9 +56,10 @@ export default function ProductCards({ product }: { product: IProduct }) {
                 ease: "power3.out",
             });
 
+            tlRef.current?.kill();
             // 👇 Sequential reveal
             const tl = gsap.timeline();
-
+            tlRef.current = tl;
             tl.to(title, {
                 bottom: 170,
                 opacity: 1,
@@ -102,7 +104,8 @@ export default function ProductCards({ product }: { product: IProduct }) {
                 duration: 0.6,
                 ease: "power3.out",
             });
-
+            tlRef.current?.kill();
+            tlRef.current = null;
             gsap.to(title, {
                 bottom: 50,
                 duration: 0.5,
