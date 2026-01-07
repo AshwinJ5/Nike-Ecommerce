@@ -3,7 +3,7 @@
 ## Submission Guidelines
 
 -   **GitHub Repository**: [https://github.com/AshwinJ5/Nike-Ecommerce](https://github.com/AshwinJ5/Nike-Ecommerce)
--   **Deployed Link**: [insert_deployed_link_here]
+-   **Deployed Link**: [[https://nike-ecommerce-nine-ruddy.vercel.app/](https://nike-ecommerce-nine-ruddy.vercel.app/)]
 
 ## Setup Instructions
 
