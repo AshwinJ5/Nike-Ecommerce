@@ -2,6 +2,10 @@ import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 import { ColorMap, IProduct, ISize } from "@/types/product";
+import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
+import { purchaseProduct } from "@/lib/api";
+import { toast } from "react-hot-toast";
 
 export default function ProductCards({ product }: { product: IProduct }) {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -15,14 +19,54 @@ export default function ProductCards({ product }: { product: IProduct }) {
     const tlRef = useRef<gsap.core.Timeline | null>(null);
 
     const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+    const [selectedSizeIndex, setSelectedSizeIndex] = useState(0);
+    const [loading, setLoading] = useState(false);
+
+    const router = useRouter();
+    const { token, isAuthenticated } = useAuthStore();
 
     const selectedColor = product.variation_colors?.[selectedColorIndex];
     const colorName = selectedColor?.color_name || "Green";
+
+    // Derived values
+    const availableSizes = selectedColor?.sizes || [];
+    const selectedSize = availableSizes[selectedSizeIndex];
+    const variationProductId = selectedSize?.variation_product_id;
 
     // Derived values from ColorMap
     const colorData = ColorMap[colorName] || { code: "#9ADA2A", image: "/shoe_green.png" };
     const backgroundColor = colorData.code;
     const productImage = colorData.image;
+
+    const handleBuyNow = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        if (!isAuthenticated || !token) {
+            router.push("/login");
+            return;
+        }
+
+        if (!variationProductId) {
+            toast.error("Please select a size/variation");
+            return;
+        }
+
+        try {
+            setLoading(true);
+
+            const res = await purchaseProduct({
+                variation_product_id: variationProductId.toString(),
+                token,
+            });
+
+            router.push(`/order-success?orderId=${res.order.id}&status=${res.order.payment_status}`);
+        } catch (error) {
+            const err = error as Error;
+            toast.error(err.message || "Something went wrong");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         const container = containerRef.current;
@@ -171,19 +215,27 @@ export default function ProductCards({ product }: { product: IProduct }) {
             <div
                 ref={sizeRef}
                 className="absolute left-0 right-0 text-center text-white z-50 flex justify-center gap-4 items-center"
-                style={{ bottom: -30 }}
+                style={{ bottom: -30, opacity: 0 }}
             >
                 <label className="block text-[16px]">SIZE:</label>
                 <div className="flex gap-1 justify-center flex-wrap">
-                    {selectedColor?.sizes
-                        ?.sort((a, b) => Number(a.size_name) - Number(b.size_name))
-                        ?.map((size: ISize) => (
+                    {availableSizes
+                        .sort((a, b) => Number(a.size_name) - Number(b.size_name))
+                        .map((size: ISize, index: number) => (
                             <button
                                 key={size.variation_product_id}
                                 disabled={!size.status}
-                                className={`h-[30px] w-[30px] rounded-[5px] text-[16px] font-semibold text-black
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedSizeIndex(index);
+                                }}
+                                className={`h-[30px] w-[30px] rounded-[5px] text-[16px] font-semibold transition-all
                 ${
-                    size.status ? " bg-white text-neutral-800 cursor-pointer" : "bg-[#372224] text-white cursor-not-allowed"
+                    selectedSizeIndex === index
+                        ? "bg-white text-neutral-900 scale-110"
+                        : size.status
+                        ? "bg-[#372224] text-white hover:bg-neutral-700 cursor-pointer"
+                        : "bg-[#372224]/50 text-white/50 cursor-not-allowed"
                 }`}
                             >
                                 {size.size_name}
@@ -194,14 +246,18 @@ export default function ProductCards({ product }: { product: IProduct }) {
             <div
                 ref={colorRef}
                 className="absolute left-0 right-0 flex justify-center items-center gap-3 text-white opacity-0"
-                style={{ bottom: -30 }}
+                style={{ bottom: -30, opacity: 0 }}
             >
                 <span className="text-[14px]">COLOR:</span>
                 <div className="flex gap-2">
                     {product.variation_colors.map((variation, index) => (
                         <button
                             key={variation.color_id}
-                            onClick={() => setSelectedColorIndex(index)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedColorIndex(index);
+                                setSelectedSizeIndex(0);
+                            }}
                             className={`w-[15px] h-[15px] rounded-full border-2 transition-all ${
                                 selectedColorIndex === index ? "border-white scale-110" : "border-neutral-600"
                             }`}
@@ -215,10 +271,12 @@ export default function ProductCards({ product }: { product: IProduct }) {
             {/* BUY BUTTON */}
             <button
                 ref={buttonRef}
-                className="absolute left-1/2 -translate-x-1/2 text-black bg-white p-3 rounded-[5px] uppercase font-bold text-[16px] gap-5"
+                onClick={handleBuyNow}
+                disabled={loading}
+                className="absolute left-1/2 -translate-x-1/2 text-black bg-white p-3 rounded-[5px] uppercase font-bold text-[16px] gap-5 disabled:opacity-50"
                 style={{ bottom: -30, opacity: 0 }}
             >
-                BUY NOW
+                {loading ? "PROCESSING..." : "BUY NOW"}
             </button>
         </div>
     );

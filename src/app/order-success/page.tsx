@@ -34,7 +34,7 @@ export default async function OrderSuccessPage({
     }
 
     return (
-        <div className="min-h-[700px] bg-[#161616] flex flex-col items-center justify-center px-4">
+        <div className="min-h-[700px] bg-[#161616] flex flex-col items-center sm:justify-center justify-start sm:py-0 py-10 px-4">
             <div className="mb-6">
                 <Image src="/logo.svg" alt="Nike" width={60} height={60} />
             </div>
