@@ -12,7 +12,7 @@ export default function NavbarAuth({ isAuthenticated }: { isAuthenticated: boole
             {!isAuthenticated ? (
                 <Link
                     href="/login"
-                    className="py-2 text-white font-semibold text-sm rounded-lg transition hover:opacity-80"
+                    className="py-2 cursor-pointer text-white font-semibold text-sm rounded-lg transition hover:opacity-80"
                 >
                     Log In
                 </Link>

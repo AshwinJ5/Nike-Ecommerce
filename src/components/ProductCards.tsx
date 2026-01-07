@@ -213,7 +213,7 @@ export default function ProductCards({ product }: { product: IProduct }) {
                                     e.stopPropagation();
                                     setSelectedSizeIndex(index);
                                 }}
-                                className={`xl:h-[30px] xl:w-[30px] h-[20px] w-[20px] xl:rounded-[5px] rounded-[2px] xl:text-[16px] text-[10px] font-semibold transition-all
+                                className={`xl:h-[30px] xl:w-[30px]  c h-[20px] w-[20px] xl:rounded-[5px] rounded-[2px] xl:text-[16px] text-[10px] font-semibold transition-all
                 ${
                     selectedSizeIndex === index
                         ? "bg-white text-neutral-900 scale-110"
@@ -241,7 +241,7 @@ export default function ProductCards({ product }: { product: IProduct }) {
                                 setSelectedColorIndex(index);
                                 setSelectedSizeIndex(0);
                             }}
-                            className={`w-[15px] h-[15px] rounded-full border-2 transition-all ${
+                            className={`w-[15px] h-[15px] rounded-full cursor-pointer border-2 transition-all ${
                                 selectedColorIndex === index ? "border-white scale-110" : "border-neutral-600"
                             }`}
                             style={{
@@ -256,7 +256,7 @@ export default function ProductCards({ product }: { product: IProduct }) {
                 ref={buttonRef}
                 onClick={handleBuyNow}
                 disabled={loading}
-                className="absolute left-1/2 -translate-x-1/2 text-black bg-white xl:p-3 p-1 rounded-[5px] uppercase font-bold xl:text-[16px] text-[12px] gap-5 disabled:opacity-50 w-[90%] xl:w-[50%] bottom-[10px] opacity-100"
+                className="absolute left-1/2 -translate-x-1/2 text-black bg-white xl:p-3 p-1 rounded-[5px] uppercase font-bold xl:text-[16px] text-[12px] gap-5 disabled:opacity-50 w-[90%] xl:w-[50%] bottom-[10px] opacity-100 cursor-pointer"
             >
                 {loading ? (
                     <span className="h-5 w-5 block mx-auto border-2 border-black/30 border-t-black rounded-full animate-spin" />
