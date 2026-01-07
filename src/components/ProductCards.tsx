@@ -166,7 +166,7 @@ export default function ProductCards({ product }: { product: IProduct }) {
     return (
         <div
             ref={containerRef}
-            className="aspect-3/4 bg-[#232323] overflow-hidden relative flex items-center justify-center group"
+            className="aspect-3/4 bg-[#232323] overflow-hidden relative flex items-center justify-center group cursor-default"
         >
             <div
                 ref={circleRef}
