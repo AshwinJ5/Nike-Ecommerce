@@ -28,12 +28,10 @@ export default function ProductCards({ product }: { product: IProduct }) {
     const selectedColor = product.variation_colors?.[selectedColorIndex];
     const colorName = selectedColor?.color_name || "Green";
 
-    // Derived values
     const availableSizes = selectedColor?.sizes || [];
     const selectedSize = availableSizes[selectedSizeIndex];
     const variationProductId = selectedSize?.variation_product_id;
 
-    // Derived values from ColorMap
     const colorData = ColorMap[colorName] || { code: "#9ADA2A", image: "/shoe_green.png" };
     const backgroundColor = colorData.code;
     const productImage = colorData.image;
@@ -75,7 +73,6 @@ export default function ProductCards({ product }: { product: IProduct }) {
         const ctx = gsap.context(() => {
             const mm = gsap.matchMedia();
 
-            // 🔹 DESKTOP INITIAL STATE (Large Screens)
             mm.add("(min-width: 1280px)", () => {
                 gsap.set(circleRef.current, { bottom: 175, left: -20 });
                 gsap.set(textRef.current, { bottom: 0 });
@@ -251,7 +248,6 @@ export default function ProductCards({ product }: { product: IProduct }) {
                     ))}
                 </div>
             </div>
-            {/* BUY BUTTON */}
             <button
                 ref={buttonRef}
                 onClick={handleBuyNow}

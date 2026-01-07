@@ -71,15 +71,9 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen bg-black flex">
-            {/* LEFT IMAGE */}
             <div className="hidden md:block md:w-[50%] relative">
-                <Image
-                    src="/login.jpg" // Figma image
-                    alt="Login"
-                    fill
-                    priority
-                    className="object-cover"
-                />
+                <Image src="/login.jpg" alt="Login" fill priority className="object-cover" />
+                <div className="absolute inset-0 bg-[#00000033] z-10" />
             </div>
 
             <div className="w-full md:w-[50%] flex sm:items-center items-start px-[16px] py-[40px]">

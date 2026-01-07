@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-// import ProductCard from "@/components/ProductCard";
 import { useProductStore } from "@/store/productStore";
 import { IProduct } from "@/types/product";
 import ProductCards from "@/components/ProductCards";
@@ -27,7 +26,6 @@ export default function Home() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 {products.map((product: IProduct) => (
-                    // <ProductCard key={product.id} product={product} />
                     <ProductCards key={product.id} product={product} />
                 ))}
             </div>
